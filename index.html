@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+</head>
+<body style="width: 800px;margin: auto;">
+
+<h4>Danh sách sản phẩm</h4>
+<button>Load danh sách</button>
+<hr>
+<table id="bodyProduct" border="1" style="border-spacing: 0;width: 300px">
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+var urlApi = 'http://localhost/api/demoApi';
+
+$(document).ready(function(){
+    $("button").click(function(){
+        $.ajax({url: urlApi + "/product/read.php", success: function(result){
+
+        	var products = result.records;
+
+        	var html = '<tr><td>Product name</td><td>Price</td></tr>';
+        	$.each( products , function( index, product ) {
+			  	html += '<tr>';
+			  	html += '<td>'+product.name+'</td>';
+			  	html += '<td>'+product.price+'</td>';
+			  	html += '<td><a onclick="loadSanPham('+product.id+')">Xem</a></td>';
+			  	html += '</tr>';
+			});
+
+            $("#bodyProduct").html(html);
+        }});
+    }); 
+});
+
+function loadSanPham(product_id){
+    $.ajax({url: urlApi +  "/product/read_one.php?id="+product_id, success: function(product){
+
+    	var html = '';
+		html += '<tr><td>Id</td><td>'+product.id+'</td></tr>';
+		html += '<tr><td>Product name</td><td>'+product.name+'</td></tr>';
+		html += '<tr><td>Description</td><td>'+product.description+'</td></tr>';
+		html += '<tr><td>Price</td><td>'+product.price+'</td></tr>';
+		html += '<tr><td>Category Name</td><td>'+product.category_name+'</td></tr>';
+
+        $("#bodyProduct").html(html);
+    }});
+}
+
+</script>
+</body>
+</html>
